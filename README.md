@@ -1,4 +1,4 @@
-<a href="https://github.com/sxdqx/payload_dumper/blob/master/README_EN.md">English language README</a>
+# <a href="https://github.com/sxdqx/payload_dumper/blob/master/README_EN.md">English language README</a>
 # payload dumper
 脚本在Linux下的Yandex Amber OTA（完全和增量）上进行了测试（但也可以在Windows上运行）
 
