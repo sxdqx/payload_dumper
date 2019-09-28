@@ -1,26 +1,26 @@
 # payload dumper
-Script tested on Yandex Amber OTA's (full and incremental) under Linux(but may works on Windows too)
+脚本在Linux下的Yandex Amber OTA（完全和增量）上进行了测试（但也可以在Windows上运行）
 
-## System requirement
+## 系统要求
 
 - Python3, pip
 - google protobuf for python `pip install protobuf`
 
-## Guide
+## 指南
 
-- Make you sure you have Python 3.6 installed.
-- Download payload_dumper.py and update_metadata_pb2.py
-- Extract your OTA zip and place payload.bin in the same folder as these files.
-- Open PowerShell, Command Prompt, or Terminal depending on your OS.
-- Enter the following command: python -m pip install protobuf
+- 确保已安装Python 3.6。
+- 下载payload_dumper.py和update_metadata_pb2.py
+- 解压缩您的OTA zip并将payload.bin放在这些文件所在的文件夹中。
+- 根据您的操作系统打开PowerShell，命令提示符或终端。
+- 输入以下命令：python -m pip install protobuf
 
-### Full OTA
+### 完整的OTA
 
-- When that’s finished, enter this command: python payload_dumper.py payload.bin
-- This will start to extract the images within the payload.bin file to the output folder you are in.
+- 完成后，输入以下命令：python payload_dumper.py payload.bin
+- 这将开始将payload.bin文件中的映像提取到您所在的output文件夹中。
 
-### Incremental OTA
+### 增量OTA
 
-- Copy original images (from full OTA or dumped from devices) to old folder (with part name + .img, ex: boot.img, system.img)
-- run python payload_dumper.py --diff payload.bin
-- file extracted to the output folder you are in.
+- 将原始映像（从完整OTA或从设备中转储）复制到old文件夹（文件名称+ .img，例如：boot.img，system.img）
+- 运行python payload_dumper.py --diff payload.bin
+- 文件提取到您所在的output文件夹中。
