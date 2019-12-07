@@ -4,6 +4,8 @@ import hashlib
 import bz2
 import sys
 import argparse
+import bsdiff4
+import io
 
 try:
     import lzma
@@ -31,12 +33,12 @@ def verify_contiguous(exts):
 
     return True
 
-def data_for_op(op,out_file):
+def data_for_op(op,out_file,old_file):
     args.payloadfile.seek(data_offset + op.data_offset)
     data = args.payloadfile.read(op.data_length)
 
     # assert hashlib.sha256(data).digest() == op.data_sha256_hash, 'operation data hash mismatch'
-
+    # print (" Unsupported type=%s" % op.type)
     if op.type == op.REPLACE_XZ:
         dec = lzma.LZMADecompressor()
         data = dec.decompress(data)
@@ -50,7 +52,6 @@ def data_for_op(op,out_file):
     elif op.type == op.REPLACE:
         out_file.seek(op.dst_extents[0].start_block*block_size)
         out_file.write(data)
-<<<<<<< HEAD
     elif op.type == op.SOURCE_COPY:
         if not args.diff:
             print ("SOURCE_COPY supported only for differential OTA")
@@ -82,8 +83,14 @@ def data_for_op(op,out_file):
             data = tmp_buff.read(ext.num_blocks*block_size)
             out_file.seek(ext.start_block*block_size)
             out_file.write(data)
-=======
->>>>>>> parent of f2b247e... add SOURCE_COPY and SOURCE_BSDIFF types
+    elif op.type == op.ZERO:
+        for ext in op.dst_extents:
+            out_file.seek(ext.start_block*block_size)
+            out_file.write(bytes('\0', encoding = "utf8") * ext.num_blocks*block_size)
+    elif op.type == op.PUFFDIFF:
+        for ext in op.src_extents:
+            out_file.seek(ext.start_block*block_size)
+            out_file.write(bytes('\0', encoding = "utf8") * ext.num_blocks*block_size)
     else:
         print ("Unsupported type = %d" % op.type)
         sys.exit(-1)
@@ -97,23 +104,28 @@ def dump_part(part):
     out_file = open('%s/%s.img' % (args.out, part.partition_name), 'wb')
     h = hashlib.sha256()
 
+    if args.diff:
+        old_file = open('%s/%s.img' % (args.old, part.partition_name), 'rb')
+    else:
+        old_file = None
+
     for op in part.operations:
-<<<<<<< HEAD
         data = data_for_op(op,out_file,old_file)
         sys.stdout.write(".")
         sys.stdout.flush()
 
     print("Done")
-=======
-        data = data_for_op(op,out_file)
->>>>>>> parent of cbdce5e... add option for differential OTA
 
 
 parser = argparse.ArgumentParser(description='OTA payload dumper')
 parser.add_argument('payloadfile', type=argparse.FileType('rb'), 
                     help='payload file name')
 parser.add_argument('--out', default='output',
-                    help='output directory')
+                    help='output directory (defaul: output)')
+parser.add_argument('--diff',action='store_true',
+                    help='extract differential OTA, you need put original images to old dir')
+parser.add_argument('--old', default='old',
+                    help='directory with original images for differential OTA (defaul: old)')
 args = parser.parse_args()
 
 magic = args.payloadfile.read(4)
