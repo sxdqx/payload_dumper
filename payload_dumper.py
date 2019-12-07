@@ -83,6 +83,7 @@ def data_for_op(op,out_file,old_file):
             out_file.seek(ext.start_block*block_size)
             out_file.write(data)
 =======
+>>>>>>> parent of f2b247e... add SOURCE_COPY and SOURCE_BSDIFF types
     else:
         print ("Unsupported type = %d" % op.type)
         sys.exit(-1)
