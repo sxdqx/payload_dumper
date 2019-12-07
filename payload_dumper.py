@@ -4,8 +4,6 @@ import hashlib
 import bz2
 import sys
 import argparse
-import bsdiff4
-import io
 
 try:
     import lzma
@@ -52,6 +50,7 @@ def data_for_op(op,out_file,old_file):
     elif op.type == op.REPLACE:
         out_file.seek(op.dst_extents[0].start_block*block_size)
         out_file.write(data)
+<<<<<<< HEAD
     elif op.type == op.SOURCE_COPY:
         if not args.diff:
             print ("SOURCE_COPY supported only for differential OTA")
@@ -83,6 +82,7 @@ def data_for_op(op,out_file,old_file):
             data = tmp_buff.read(ext.num_blocks*block_size)
             out_file.seek(ext.start_block*block_size)
             out_file.write(data)
+=======
     else:
         print ("Unsupported type = %d" % op.type)
         sys.exit(-1)
